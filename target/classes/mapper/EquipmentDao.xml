@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.bigscreen.dao.EquipmentDao">
+
+    <resultMap type="com.jc.bigscreen.entity.Equipment" id="EquipmentMap">
+        <result property="equipmentId" column="equipment_id" jdbcType="INTEGER"/>
+        <result property="equipmentState" column="equipment_state" jdbcType="VARCHAR"/>
+        <result property="bindUserId" column="bind_user_id" jdbcType="INTEGER"/>
+        <result property="bindUsername" column="bind_username" jdbcType="VARCHAR"/>
+        <result property="lastCommunicateDate" column="last_communicate_date" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EquipmentMap">
+        select
+          equipment_id, equipment_state, bind_user_id, bind_username, last_communicate_date
+        from equipment
+        where equipment_id = #{equipmentId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="EquipmentMap">
+        select
+          equipment_id, equipment_state, bind_user_id, bind_username, last_communicate_date
+        from equipment
+        <where>
+            <if test="equipmentId != null">
+                and equipment_id = #{equipmentId}
+            </if>
+            <if test="equipmentState != null and equipmentState != ''">
+                and equipment_state = #{equipmentState}
+            </if>
+            <if test="bindUserId != null">
+                and bind_user_id = #{bindUserId}
+            </if>
+            <if test="bindUsername != null and bindUsername != ''">
+                and bind_username = #{bindUsername}
+            </if>
+            <if test="lastCommunicateDate != null and lastCommunicateDate != ''">
+                and last_communicate_date = #{lastCommunicateDate}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from equipment
+        <where>
+            <if test="equipmentId != null">
+                and equipment_id = #{equipmentId}
+            </if>
+            <if test="equipmentState != null and equipmentState != ''">
+                and equipment_state = #{equipmentState}
+            </if>
+            <if test="bindUserId != null">
+                and bind_user_id = #{bindUserId}
+            </if>
+            <if test="bindUsername != null and bindUsername != ''">
+                and bind_username = #{bindUsername}
+            </if>
+            <if test="lastCommunicateDate != null and lastCommunicateDate != ''">
+                and last_communicate_date = #{lastCommunicateDate}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="equipmentId" useGeneratedKeys="true">
+        insert into equipment(equipment_state, bind_user_id, bind_username, last_communicate_date)
+        values (#{equipmentState}, #{bindUserId}, #{bindUsername}, #{lastCommunicateDate})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="equipmentId" useGeneratedKeys="true">
+        insert into equipment(equipment_state, bind_user_id, bind_username, last_communicate_date)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.equipmentState}, #{entity.bindUserId}, #{entity.bindUsername}, #{entity.lastCommunicateDate})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="equipmentId" useGeneratedKeys="true">
+        insert into equipment(equipment_state, bind_user_id, bind_username, last_communicate_date)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.equipmentState}, #{entity.bindUserId}, #{entity.bindUsername}, #{entity.lastCommunicateDate})
+        </foreach>
+        on duplicate key update
+        equipment_state = values(equipment_state),
+        bind_user_id = values(bind_user_id),
+        bind_username = values(bind_username),
+        last_communicate_date = values(last_communicate_date)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update equipment
+        <set>
+            <if test="equipmentState != null and equipmentState != ''">
+                equipment_state = #{equipmentState},
+            </if>
+            <if test="bindUserId != null">
+                bind_user_id = #{bindUserId},
+            </if>
+            <if test="bindUsername != null and bindUsername != ''">
+                bind_username = #{bindUsername},
+            </if>
+            <if test="lastCommunicateDate != null and lastCommunicateDate != ''">
+                last_communicate_date = #{lastCommunicateDate},
+            </if>
+        </set>
+        where equipment_id = #{equipmentId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from equipment where equipment_id = #{equipmentId}
+    </delete>
+
+</mapper>
+

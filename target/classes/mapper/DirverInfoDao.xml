@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.bigscreen.dao.DirverInfoDao">
+
+    <resultMap type="com.jc.bigscreen.entity.DirverInfo" id="DirverInfoMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="idNum" column="id_num" jdbcType="VARCHAR"/>
+        <result property="phoneNum" column="phone_num" jdbcType="VARCHAR"/>
+        <result property="heartRate" column="heart_rate" jdbcType="INTEGER"/>
+        <result property="temperature" column="temperature" jdbcType="NUMERIC"/>
+        <result property="respiratoryRate" column="respiratory_rate" jdbcType="INTEGER"/>
+        <result property="stepNumber" column="step_number" jdbcType="INTEGER"/>
+        <result property="bloodOxygen" column="blood_oxygen" jdbcType="INTEGER"/>
+        <result property="stress" column="stress" jdbcType="INTEGER"/>
+        <result property="emo" column="emo" jdbcType="INTEGER"/>
+        <result property="istired" column="istired" jdbcType="INTEGER"/>
+        <result property="collectionDate" column="collection_date" jdbcType="VARCHAR"/>
+        <result property="reserve" column="reserve" jdbcType="VARCHAR"/>
+        <result property="reserve2" column="reserve2" jdbcType="VARCHAR"/>
+        <result property="reserve3" column="reserve3" jdbcType="VARCHAR"/>
+        <result property="reserve4" column="reserve4" jdbcType="VARCHAR"/>
+        <result property="reserve5" column="reserve5" jdbcType="VARCHAR"/>
+        <result property="reserve6" column="reserve6" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DirverInfoMap">
+        select
+          user_id, name, id_num, phone_num, heart_rate, temperature, respiratory_rate, step_number, blood_oxygen, stress, emo, istired, collection_date, reserve, reserve2, reserve3, reserve4, reserve5, reserve6
+        from dirver_info
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DirverInfoMap">
+        select
+          user_id, name, id_num, phone_num, heart_rate, temperature, respiratory_rate, step_number, blood_oxygen, stress, emo, istired, collection_date, reserve, reserve2, reserve3, reserve4, reserve5, reserve6
+        from dirver_info
+<!--        <where>-->
+<!--            <if test="name != null and name != ''">-->
+<!--                and name = #{name}-->
+<!--            </if>-->
+<!--        </where>-->
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="queryAll" resultMap="DirverInfoMap">
+        select
+          user_id, name, id_num, phone_num, heart_rate, temperature, respiratory_rate, step_
+         limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from dirver_info
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="idNum != null and idNum != ''">
+                and id_num = #{idNum}
+            </if>
+            <if test="phoneNum != null and phoneNum != ''">
+                and phone_num = #{phoneNum}
+            </if>
+            <if test="heartRate != null">
+                and heart_rate = #{heartRate}
+            </if>
+            <if test="temperature != null">
+                and temperature = #{temperature}
+            </if>
+            <if test="respiratoryRate != null">
+                and respiratory_rate = #{respiratoryRate}
+            </if>
+            <if test="stepNumber != null">
+                and step_number = #{stepNumber}
+            </if>
+            <if test="bloodOxygen != null">
+                and blood_oxygen = #{bloodOxygen}
+            </if>
+            <if test="stress != null">
+                and stress = #{stress}
+            </if>
+            <if test="emo != null">
+                and emo = #{emo}
+            </if>
+            <if test="istired != null">
+                and istired = #{istired}
+            </if>
+            <if test="collectionDate != null and collectionDate != ''">
+                and collection_date = #{collectionDate}
+            </if>
+            <if test="reserve != null and reserve != ''">
+                and reserve = #{reserve}
+            </if>
+            <if test="reserve2 != null and reserve2 != ''">
+                and reserve2 = #{reserve2}
+            </if>
+            <if test="reserve3 != null and reserve3 != ''">
+                and reserve3 = #{reserve3}
+            </if>
+            <if test="reserve4 != null and reserve4 != ''">
+                and reserve4 = #{reserve4}
+            </if>
+            <if test="reserve5 != null and reserve5 != ''">
+                and reserve5 = #{reserve5}
+            </if>
+            <if test="reserve6 != null and reserve6 != ''">
+                and reserve6 = #{reserve6}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into dirver_info(name, id_num, phone_num, heart_rate, temperature, respiratory_rate, step_number, blood_oxygen, stress, emo, istired, collection_date, reserve, reserve2, reserve3, reserve4, reserve5, reserve6)
+        values (#{name}, #{idNum}, #{phoneNum}, #{heartRate}, #{temperature}, #{respiratoryRate}, #{stepNumber}, #{bloodOxygen}, #{stress}, #{emo}, #{istired}, #{collectionDate}, #{reserve}, #{reserve2}, #{reserve3}, #{reserve4}, #{reserve5}, #{reserve6})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into dirver_info(name, id_num, phone_num, heart_rate, temperature, respiratory_rate, step_number, blood_oxygen, stress, emo, istired, collection_date, reserve, reserve2, reserve3, reserve4, reserve5, reserve6)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.idNum}, #{entity.phoneNum}, #{entity.heartRate}, #{entity.temperature}, #{entity.respiratoryRate}, #{entity.stepNumber}, #{entity.bloodOxygen}, #{entity.stress}, #{entity.emo}, #{entity.istired}, #{entity.collectionDate}, #{entity.reserve}, #{entity.reserve2}, #{entity.reserve3}, #{entity.reserve4}, #{entity.reserve5}, #{entity.reserve6})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into dirver_info(name, id_num, phone_num, heart_rate, temperature, respiratory_rate, step_number, blood_oxygen, stress, emo, istired, collection_date, reserve, reserve2, reserve3, reserve4, reserve5, reserve6)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.idNum}, #{entity.phoneNum}, #{entity.heartRate}, #{entity.temperature}, #{entity.respiratoryRate}, #{entity.stepNumber}, #{entity.bloodOxygen}, #{entity.stress}, #{entity.emo}, #{entity.istired}, #{entity.collectionDate}, #{entity.reserve}, #{entity.reserve2}, #{entity.reserve3}, #{entity.reserve4}, #{entity.reserve5}, #{entity.reserve6})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        id_num = values(id_num),
+        phone_num = values(phone_num),
+        heart_rate = values(heart_rate),
+        temperature = values(temperature),
+        respiratory_rate = values(respiratory_rate),
+        step_number = values(step_number),
+        blood_oxygen = values(blood_oxygen),
+        stress = values(stress),
+        emo = values(emo),
+        istired = values(istired),
+        collection_date = values(collection_date),
+        reserve = values(reserve),
+        reserve2 = values(reserve2),
+        reserve3 = values(reserve3),
+        reserve4 = values(reserve4),
+        reserve5 = values(reserve5),
+        reserve6 = values(reserve6)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update dirver_info
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="idNum != null and idNum != ''">
+                id_num = #{idNum},
+            </if>
+            <if test="phoneNum != null and phoneNum != ''">
+                phone_num = #{phoneNum},
+            </if>
+            <if test="heartRate != null">
+                heart_rate = #{heartRate},
+            </if>
+            <if test="temperature != null">
+                temperature = #{temperature},
+            </if>
+            <if test="respiratoryRate != null">
+                respiratory_rate = #{respiratoryRate},
+            </if>
+            <if test="stepNumber != null">
+                step_number = #{stepNumber},
+            </if>
+            <if test="bloodOxygen != null">
+                blood_oxygen = #{bloodOxygen},
+            </if>
+            <if test="stress != null">
+                stress = #{stress},
+            </if>
+            <if test="emo != null">
+                emo = #{emo},
+            </if>
+            <if test="istired != null">
+                istired = #{istired},
+            </if>
+            <if test="collectionDate != null and collectionDate != ''">
+                collection_date = #{collectionDate},
+            </if>
+            <if test="reserve != null and reserve != ''">
+                reserve = #{reserve},
+            </if>
+            <if test="reserve2 != null and reserve2 != ''">
+                reserve2 = #{reserve2},
+            </if>
+            <if test="reserve3 != null and reserve3 != ''">
+                reserve3 = #{reserve3},
+            </if>
+            <if test="reserve4 != null and reserve4 != ''">
+                reserve4 = #{reserve4},
+            </if>
+            <if test="reserve5 != null and reserve5 != ''">
+                reserve5 = #{reserve5},
+            </if>
+            <if test="reserve6 != null and reserve6 != ''">
+                reserve6 = #{reserve6},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from dirver_info where user_id = #{userId}
+    </delete>
+
+</mapper>
+
